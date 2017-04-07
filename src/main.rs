@@ -1,5 +1,6 @@
 extern crate runtime_datastructure;
 
+use runtime_datastructure::input::parse;
 use runtime_datastructure::primitives;
 use runtime_datastructure::pst_3d;
 
@@ -14,13 +15,15 @@ fn main() {
         process::exit(1);
     });
     
-    print!("Starting runtime datastructure with min_t: {}", config.m_min_t);
+    println!("Starting runtime datastructure with min_t: {}", config.m_min_t);
     if config.m_input_path != "" {
         println!(" and path {}", config.m_input_path);
     }
     
+    println!("Input: {}\nvalid:\t{}", config.m_input_path, parse::validate_label(&config.m_input_path)); parse::parse_label(&config.m_input_path);
+    
     // Testing stuff ...
-    if true {
+    if false {
         let l = primitives::label::Label::new(90., 90., 0.9, 1234567, 16, "Test".to_string());
         
         println!("Test label:\n{}", l.to_string());
