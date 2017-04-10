@@ -5,14 +5,14 @@ pub struct Label {
     m_y: f64,
     m_t: f64,
     
-    m_osm_id: i32,
-    m_prio: i8,
+    m_osm_id: i64,
+    m_prio: i32,
 
     m_label: String,
 }
 
 impl Label {
-    pub fn new(x: f64, y: f64, t : f64, osm_id : i32, prio: i8, label: String) -> Label {
+    pub fn new(x: f64, y: f64, t : f64, osm_id : i64, prio: i32, label: String) -> Label {
         Label {
             m_x: x,
             m_y: y,
@@ -23,11 +23,11 @@ impl Label {
         }
     }
     
-    pub fn get_osm_id(&self) -> i32 {
+    pub fn get_osm_id(&self) -> i64 {
         self.m_osm_id
     }
     
-    pub fn get_prio(&self) -> i8 {
+    pub fn get_prio(&self) -> i32 {
         self.m_prio
     }
     

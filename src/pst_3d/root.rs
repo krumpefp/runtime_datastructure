@@ -238,7 +238,6 @@ fn create_root_x(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize
             assert!(root_refs.len() > 0);
             assert!(last.len() > 0);
             
-            println!("After x-split with {}:\nLeft: {:?}\nRight: {:?}", split_value, root_refs, last);
             left_child_idx = Some(create_root_y(root_refs, &mut  data));
             right_child_idx = Some(create_root_y(last, &mut  data));
         }
@@ -295,7 +294,6 @@ fn create_root_y(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize
             assert!(root_refs.len() > 0);
             assert!(last.len() > 0);
             
-            println!("After y-split with {}:\nLeft: {:?}\nRight: {:?}", split_value, root_refs, last);
             left_child_idx = Some(create_root_x(root_refs, &mut data));
             right_child_idx = Some(create_root_x(last, &mut data));
         }
