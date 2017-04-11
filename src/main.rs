@@ -1,5 +1,6 @@
 extern crate runtime_datastructure;
 
+use runtime_datastructure::input;
 use runtime_datastructure::primitives;
 use runtime_datastructure::pst_3d;
 
@@ -8,19 +9,37 @@ use std::error::Error;
 use std::process;
 
 fn main() {
+    let testing = false;
+
     let args : Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
     
-    print!("Starting runtime datastructure with min_t: {}", config.m_min_t);
+    println!("Starting runtime datastructure with min_t: {}", config.m_min_t);
     if config.m_input_path != "" {
         println!(" and path {}", config.m_input_path);
     }
     
+    let labels = match input::import_labels(&config.m_input_path) {
+        Ok(res) => {
+            println!("Successfully imported {} labels", res.len());
+            res
+        },
+        Err(e) => panic!("Could not read the given input file:{}\n\t{:?}\n", config.m_input_path, e),
+    };
+    
+    if testing {
+        for (idx, l) in labels.iter().enumerate() {
+            println!("Parsed label (#{}):\n{}", idx, l.to_string());
+        }
+    }
+    
+    let mut tree = pst_3d::PST_3D::new(labels.clone());
+    
     // Testing stuff ...
-    if true {
+    if testing {
         let l = primitives::label::Label::new(90., 90., 0.9, 1234567, 16, "Test".to_string());
         
         println!("Test label:\n{}", l.to_string());
