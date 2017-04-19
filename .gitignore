@@ -2,3 +2,6 @@ target
 .kdev4
 Cargo.lock
 resources/
+.ipynb_checkpoints/
+*.orig
+*.bk
