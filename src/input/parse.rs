@@ -4,7 +4,15 @@ use primitives::label::Label;
 
 pub fn validate_label(s_input: &String) -> bool {
     lazy_static! {
-        static ref RE : Regex = Regex::new(r"^\d{1,3}\.\d* \d{1,3}\.\d* \d+ \d+ \d+\.\d* \d+\.\d* \d+\.\d* '.*'").unwrap();
+        static ref RE : Regex = Regex::new("\
+        ^\\d{1,3}\\.\\d* \
+        \\d{1,3}\\.\\d* \
+        \\d+ \\d+ \
+        \\d+\\.\\d* \
+        \\d+\\.\\d* \
+        \\d+\\.\\d* \
+        '.*'\
+        ").unwrap();
     }
 
     RE.is_match(s_input)
@@ -12,10 +20,19 @@ pub fn validate_label(s_input: &String) -> bool {
 
 pub fn parse_label(s_input: &String) -> Label {
     lazy_static! {
-        static ref RE2 : Regex = Regex::new(r"^(?P<y>\d{1,3}\.\d*) (?P<x>\d{1,3}\.\d*) (?P<osmId>\d+) (?P<prio>\d+) (?P<elimT>\d+\.\d*) (?P<rad>\d+\.\d*) (?P<lblFac>\d+\.\d*) '(?P<lbl>.*)'").unwrap();
+        static ref RE2 : Regex = Regex::new("\
+        ^(?P<y>\\d{1,3}\\.\\d*) \
+        (?P<x>\\d{1,3}\\.\\d*) \
+        (?P<osmId>\\d+) \
+        (?P<prio>\\d+) \
+        (?P<elimT>\\d+\\.\\d*) \
+        (?P<rad>\\d+\\.\\d*) \
+        (?P<lblFac>\\d+\\.\\d*) \
+        '(?P<lbl>.*)'\
+        ").unwrap();
     }
     //     println!("Trimmed string: {}", s_input);
-//     let fields = RE2.captures(s_input).unwrap();
+    //     let fields = RE2.captures(s_input).unwrap();
     let fields = match RE2.captures(s_input) {
         Some(capture) => capture,
         None => panic!("Could not evaulate poi: {}", s_input),

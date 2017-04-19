@@ -23,15 +23,16 @@ fn main() {
     if config.m_input_path != "" {
         println!(" and path {}", config.m_input_path);
     }
-    
-    
+
+
     //     let testing = false;
     //     let labels = match input::import_labels(&config.m_input_path) {
     //         Ok(res) => {
     //             println!("Successfully imported {} labels", res.len());
     //             res
     //         },
-    //         Err(e) => panic!("Could not read the given input file:{}\n\t{:?}\n", config.m_input_path, e),
+    //         Err(e) => panic!("Could not read the given input file:\
+    // {}\n\t{:?}\n", config.m_input_path, e),
     //     };
     //
     //     if testing {
@@ -44,7 +45,8 @@ fn main() {
     //
     //     // Testing stuff ...
     //     if testing {
-    //         let l = primitives::label::Label::new(90., 90., 0.9, 1234567, 16, "Test".to_string());
+    //         let l = primitives::label::Label::new(90., 90., 0.9, 1234567,
+    // 16, "Test".to_string());
     //
     //         println!("Test label:\n{}", l.to_string());
     //
@@ -73,7 +75,8 @@ fn main() {
     //         let bb = primitives::bbox::BBox::new(4., 5., 7., 8.);
     //         let r = t.get(&bb, config.m_min_t);
     //
-    //         println!("Requesting labels with min t: {} in {}", config.m_min_t, bb.to_string());
+    //         println!("Requesting labels with min t: {} in {}",
+    //config.m_min_t, bb.to_string());
     //
     //         println!("\n####    RESULTS:");
     //         for elem in r {

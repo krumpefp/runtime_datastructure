@@ -31,6 +31,6 @@ pub fn import_labels(path: &String) -> Result<Vec<Label>, Box<Error>> {
     }
 
     assert_eq!(total, result.len());
-    
+
     Ok(result)
 }

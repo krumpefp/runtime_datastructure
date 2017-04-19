@@ -19,8 +19,8 @@ use std::fs::File;
 #[repr(C)]
 pub struct DataStructure {
     pst: Option<pst_3d::Pst3d>,
-    
-    last_res : Vec<C_Label>,
+
+    last_res: Vec<C_Label>,
 }
 
 #[repr(C)]
@@ -48,7 +48,12 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
 
     let input_path = match c_string.to_str() {
         Ok(path) => path.to_string(),
-        Err(_) => return Box::new(DataStructure { pst: None, last_res: Vec::new()}),
+        Err(_) => {
+            return Box::new(DataStructure {
+                                pst: None,
+                                last_res: Vec::new(),
+                            })
+        }
     };
 
     // debug
@@ -76,7 +81,10 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
         }
     };
 
-    Box::new(DataStructure { pst: tree, last_res: Vec::new() })
+    Box::new(DataStructure {
+                 pst: tree,
+                 last_res: Vec::new(),
+             })
 }
 
 #[no_mangle]
@@ -96,8 +104,11 @@ pub extern "C" fn get_data(ds: &mut DataStructure,
         Some(ref pst) => pst,
         None => {
             ds.last_res = Vec::new();
-            
-            return C_Result { size: ds.last_res.len() as u64, data: ds.last_res.as_mut_ptr() };
+
+            return C_Result {
+                       size: ds.last_res.len() as u64,
+                       data: ds.last_res.as_mut_ptr(),
+                   };
         }
     };
 
@@ -107,14 +118,15 @@ pub extern "C" fn get_data(ds: &mut DataStructure,
     ds.last_res = Vec::new();
     for e in &r {
         let c_label = CString::new(e.get_label().as_str()).unwrap();
-        ds.last_res.push(C_Label {
-                        x: e.get_x(),
-                        y: e.get_y(),
-                        t: e.get_t(),
-                        osm_id: e.get_osm_id(),
-                        prio: e.get_prio(),
-                        label: c_label.into_raw(),
-                    });
+        ds.last_res
+            .push(C_Label {
+                      x: e.get_x(),
+                      y: e.get_y(),
+                      t: e.get_t(),
+                      osm_id: e.get_osm_id(),
+                      prio: e.get_prio(),
+                      label: c_label.into_raw(),
+                  });
     }
     C_Result {
         size: r.len() as u64,
