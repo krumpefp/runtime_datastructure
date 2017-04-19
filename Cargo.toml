@@ -3,6 +3,11 @@ name = "runtime_datastructure"
 version = "0.1.0"
 authors = ["Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de>"]
 
+[lib]
+name = "runtime_datastructure"
+crate-type = ["dylib"]
+
 [dependencies]
 lazy_static = "0.2.6"
+libc = "0.2.0"
 regex = "0.2"

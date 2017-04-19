@@ -51,31 +51,35 @@ impl BBox {
         self.m_min_x = self.m_max_x.min(other_box.m_min_x);
         self.m_min_y = self.m_max_y.min(other_box.m_min_y);
     }
-    
+
     pub fn get_max_x(&self) -> f64 {
         self.m_max_x
     }
-    
+
     pub fn get_max_y(&self) -> f64 {
         self.m_max_y
     }
-    
+
     pub fn get_min_x(&self) -> f64 {
         self.m_min_x
     }
-    
+
     pub fn get_min_y(&self) -> f64 {
         self.m_min_y
     }
-    
-    pub fn is_contained(&self, l : &Label) -> bool {
+
+    pub fn is_contained(&self, l: &Label) -> bool {
         let x_in = l.get_x() <= self.m_max_x && l.get_x() >= self.m_min_x;
         let y_in = l.get_y() <= self.m_max_y && l.get_y() >= self.m_min_y;
-        
+
         x_in && y_in
     }
-    
+
     pub fn to_string(&self) -> String {
-        format!("[x: {} - {}, y: {} - {}]", self.m_min_x, self.m_max_x, self.m_min_y, self.m_max_y)
+        format!("[x: {} - {}, y: {} - {}]",
+                self.m_min_x,
+                self.m_max_x,
+                self.m_min_y,
+                self.m_max_y)
     }
 }

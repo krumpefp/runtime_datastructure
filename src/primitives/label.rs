@@ -4,7 +4,7 @@ pub struct Label {
     m_x: f64,
     m_y: f64,
     m_t: f64,
-    
+
     m_osm_id: i64,
     m_prio: i32,
 
@@ -12,7 +12,7 @@ pub struct Label {
 }
 
 impl Label {
-    pub fn new(x: f64, y: f64, t : f64, osm_id : i64, prio: i32, label: String) -> Label {
+    pub fn new(x: f64, y: f64, t: f64, osm_id: i64, prio: i32, label: String) -> Label {
         Label {
             m_x: x,
             m_y: y,
@@ -22,15 +22,19 @@ impl Label {
             m_label: label,
         }
     }
-    
+
+    pub fn get_label(&self) -> &String {
+        &self.m_label
+    }
+
     pub fn get_osm_id(&self) -> i64 {
         self.m_osm_id
     }
-    
+
     pub fn get_prio(&self) -> i32 {
         self.m_prio
     }
-    
+
     pub fn get_t(&self) -> f64 {
         self.m_t
     }
@@ -43,7 +47,7 @@ impl Label {
         self.m_y
     }
 
-    
+
     /// This function compares two pois with respect to their y coordinate
     ///
     /// # Examples
@@ -69,7 +73,7 @@ impl Label {
             Ordering::Equal
         }
     }
-    
+
     /// This function compares two pois with respect to their x coordinate
     ///
     /// # Examples
@@ -97,7 +101,7 @@ impl Label {
 
     }
 
-    
+
     /// This function compares two pois with respect to their y coordinate
     ///
     /// # Examples
@@ -123,14 +127,25 @@ impl Label {
             Ordering::Equal
         }
     }
-    
+
     pub fn to_string(&self) -> String {
-        format!("Label [#{}]: '{}' at ({}, {}) with prio {} and elim-t: {}", self.m_osm_id, self.m_label, self.m_x, self.m_y, self.m_prio, self.m_t)
+        format!("Label [#{}]: '{}' at ({}, {}) with prio {} and elim-t: {}",
+                self.m_osm_id,
+                self.m_label,
+                self.m_x,
+                self.m_y,
+                self.m_prio,
+                self.m_t)
     }
 }
 
 impl Clone for Label {
     fn clone(&self) -> Self {
-        Self::new(self.m_x, self.m_y, self.m_t, self.m_osm_id, self.m_prio, self.m_label.clone())
+        Self::new(self.m_x,
+                  self.m_y,
+                  self.m_t,
+                  self.m_osm_id,
+                  self.m_prio,
+                  self.m_label.clone())
     }
 }
