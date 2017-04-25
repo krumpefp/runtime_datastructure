@@ -1,8 +1,8 @@
 /*
     The library provides a simple datastructure to access geolocated labels with an additional
-    elimination time t and a label size factor. The library provides method to query a set of such
-    labels with a bounding box and a minimum elimination time.
-    
+    elimination time t and a label size factor. The library provides method to query a set of
+    such labels with a bounding box and a minimum elimination time.
+
     Copyright (C) {2017}  {Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de}
 
     This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,8 @@
 #[macro_use]
 extern crate lazy_static;
 
-extern crate libc;
+extern crate rand;
+
 extern crate regex;
 
 ///
@@ -67,7 +68,7 @@ pub mod pst_3d;
 /// Where the first line contains the number of elements<br>
 ///
 /// The second line is a standard header<br>
-/// 
+///
 /// Each of the following lines defines a label:<br>
 ///  * its position (lat, lon)<br>
 ///  * its collision time<br>
@@ -233,5 +234,109 @@ pub extern "C" fn get_data(ds: &mut DataStructure,
     C_Result {
         size: r.len() as u64,
         data: ds.last_res.as_mut_ptr(),
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    extern crate rand;
+    
+    
+    const TEST_SIZE: usize = 500;
+    const TEST_COUNT: usize = 1;
+    
+    use rand::{thread_rng, Rng};
+
+    use std::collections::HashSet;
+
+    use super::primitives::{bbox, label};
+    use super::pst_3d;
+
+    // create a random floating point number in the range -180 to 180
+    fn rand_lat() -> f64 {
+        180. * rand::random::<f64>() - 90.
+    }
+
+    // create a random floating point number in the range -90 to 90
+    fn rand_lon() -> f64 {
+        360. * rand::random::<f64>() - 180.
+    }
+
+    // create a random level instance of count many elements
+    fn random_label_instance(count: usize) -> Vec<label::Label> {
+        let mut v: Vec<label::Label> = Vec::new();
+
+        for counter in 1..count {
+            let lat = rand_lat();
+            let lon = rand_lon();
+            let t = rand::random::<f64>();
+
+            v.push(label::Label::new(lon,
+                                     lat,
+                                     t,
+                                     counter as i64,
+                                     counter as i32,
+                                     1.0,                  // label factor is not of interesst
+                                     format!("T {}", counter)));
+        }
+
+        v
+    }
+
+    // get a hash set of ids of the labels in the label list
+    fn get_id_set(v: &Vec<&label::Label>) -> HashSet<i64> {
+        let mut res = HashSet::new();
+
+        for id in v.iter().map(|l| l.get_osm_id()) {
+            res.insert(id);
+        }
+
+        res
+    }
+
+    // get a hash set of ids of the labels in the label list
+    fn get_id_set_filtered(v: &Vec<label::Label>, bbox: &bbox::BBox, t: f64) -> HashSet<i64> {
+        let mut res = HashSet::new();
+
+        for id in v.iter()
+                .filter(|l| l.get_t() >= t)
+                .filter(|l| bbox.is_contained(l))
+                .map(|l| l.get_osm_id()) {
+            res.insert(id);
+        }
+
+        res
+    }
+
+    #[test]
+    fn randomized_test() {
+        let instance = random_label_instance(TEST_SIZE);
+
+        let mut data_box = bbox::BBox::new_empty();
+        for l in &instance {
+            data_box.add_to_box(l);
+        }
+
+        let pskdt = pst_3d::Pst3d::new(instance.clone());
+
+
+
+        let mut rng = rand::thread_rng();
+
+        for i in 0..TEST_COUNT {
+            let t = rand::random::<f64>();
+
+            let min_x = rng.gen_range(data_box.get_min_x(), data_box.get_max_x());
+            let max_x = rng.gen_range(min_x, data_box.get_max_x());
+            let min_y = rng.gen_range(data_box.get_min_y(), data_box.get_max_y());
+            let max_y = rng.gen_range(min_y, data_box.get_max_y());
+
+            let bbox = bbox::BBox::new(min_x, min_y, max_x, max_y);
+
+            let res = pskdt.get(&bbox, t);
+            
+            assert!(get_id_set(&res) == get_id_set_filtered(&instance, &bbox, t));
+        }
     }
 }

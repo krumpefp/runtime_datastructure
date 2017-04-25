@@ -1,0 +1,7 @@
+Request with min t = 1
+in bbox [x: 8 - 9, y: 53 - 54]
+Label [#20982927]: 'Bremen' at (8.8071646, 53.0758196) with prio 5 and elim-t: 3686.835042292192
+Label [#660314734]: 'Bremerhaven' at (8.5865509, 53.5522264) with prio 4 and elim-t: 4.751763965397364
+Label [#253042611]: 'Farge' at (8.528893, 53.200157000000004) with prio 2 and elim-t: 1.5769136968447124
+Label [#2147118476]: 'Vegesack' at (8.6238803, 53.170524900000004) with prio 3 and elim-t: 2.2440622447579543
+Label [#3627273522]: 'Timmersloh' at (8.9351249, 53.143155300000004) with prio 1 and elim-t: 1.4922737369836614

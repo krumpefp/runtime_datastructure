@@ -1,8 +1,8 @@
 /*
     The library provides a simple datastructure to access geolocated labels with an additional
-    elimination time t and a label size factor. The library provides method to query a set of such
-    labels with a bounding box and a minimum elimination time.
-    
+    elimination time t and a label size factor. The library provides method to query a set of
+    such labels with a bounding box and a minimum elimination time.
+
     Copyright (C) {2017}  {Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de}
 
     This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ pub struct Label {
     m_osm_id: i64,
     m_prio: i32,
 
-    m_lbl_fac : f64,
+    m_lbl_fac: f64,
     m_label: String,
 }
 
@@ -50,7 +50,7 @@ impl Label {
     /// let l = label::Label::new(90., 90., 0.9, 1234567, 16, 1.5, "Test".to_string());
     /// ```
     ///
-    pub fn new(x: f64, y: f64, t: f64, osm_id: i64, prio: i32, lbl_f : f64, label: String) -> Label {
+    pub fn new(x: f64, y: f64, t: f64, osm_id: i64, prio: i32, lbl_f: f64, label: String) -> Label {
         Label {
             m_x: x,
             m_y: y,

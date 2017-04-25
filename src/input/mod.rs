@@ -1,8 +1,8 @@
 /*
     The library provides a simple datastructure to access geolocated labels with an additional
-    elimination time t and a label size factor. The library provides method to query a set of such
-    labels with a bounding box and a minimum elimination time.
-    
+    elimination time t and a label size factor. The library provides method to query a set of
+    such labels with a bounding box and a minimum elimination time.
+
     Copyright (C) {2017}  {Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de}
 
     This program is free software: you can redistribute it and/or modify

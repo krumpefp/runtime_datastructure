@@ -5,9 +5,9 @@ authors = ["Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de>"]
 
 [lib]
 name = "rt_datastructure"
-crate-type = ["dylib", "rlib"]
+crate-type = ["rlib", "dylib"]
 
 [dependencies]
 lazy_static = "0.2.6"
-libc = "0.2.0"
+rand = "0.3.15"
 regex = "0.2"

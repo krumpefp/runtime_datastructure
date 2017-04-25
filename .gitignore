@@ -1,7 +1,10 @@
-target
-.kdev4
-Cargo.lock
-resources/
+# folders
 .ipynb_checkpoints/
+.kdev4
+resources/
+target
+
+
+Cargo.lock
 *.orig
 *.bk
