@@ -4,6 +4,9 @@ use std::cmp::Ordering;
 use primitives::label::Label;
 use primitives::bbox::BBox;
 
+///
+/// Represent the possible split dimensions.
+///
 #[derive(PartialEq)]
 enum SplitDimension {
     X,
@@ -11,6 +14,18 @@ enum SplitDimension {
     UNDEF,
 }
 
+///
+/// The struct defines a tree node.
+///
+/// The tree nodes members are the labels t value, the label itself, the split
+/// type (X, Y or UNDEF in case the node is a leaf node).
+///
+/// The split value indicates the maximum value of the left children in the
+/// corresponding dimension. The split value is guaranteed to be less than the
+/// corresponding coordinate of the right children.
+///
+/// Left and right child are some indices, if there is a left or right subtree
+/// and none otherwise.
 pub struct Root {
     m_t: f64,
     m_data: Label,
@@ -21,6 +36,15 @@ pub struct Root {
 }
 
 impl Root {
+    ///
+    /// Construct a new root from the given label
+    ///
+    /// Note: The function only contains the given label. No subtrees of
+    /// connenctions to other tree nodes are constructed.
+    ///
+    /// To construct a single tree from a forest of root nodes use the
+    /// Root::init_pst3d(...) function.
+    ///
     pub fn new(l: Label) -> Root {
         Root {
             m_t: l.get_t(),
@@ -33,8 +57,15 @@ impl Root {
         }
     }
 
-
-
+    ///
+    /// Initialize a single 3D PST out of a forest of root nodes and return the
+    /// root node index.
+    ///
+    /// The function will mutate the given root nodes and set the corresponding
+    /// split type, split value and left and right subtree indices.
+    ///
+    /// The function returns the index of the root node in the data array.
+    /// 
     pub fn init_pst3d(mut data: &mut Vec<Root>) -> usize {
         let mut refs: Vec<RootRef> = Vec::with_capacity(data.len());
 
@@ -45,7 +76,10 @@ impl Root {
         create_root_x(refs, &mut data)
     }
 
-
+    ///
+    /// Get a vector of references to the elements in the 3d PST with t >= min_t
+    /// and that are contained in bbox.
+    ///
     pub fn get<'a>(&'a self, bbox: &BBox, min_t: f64, data: &'a Vec<Root>) -> Vec<&'a Label> {
         let mut r: Vec<&Label> = Vec::new();
 
@@ -89,6 +123,17 @@ impl Root {
         r
     }
 
+    ///
+    /// Get a human readable string representation of the tree rooted at self.
+    ///
+    /// A such string will look like:
+    ///
+    /// ```text
+    ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1 and elim-t: 9\n
+    ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1 and elim-t: 8\n
+    ///   l        x-node (split: NaN): Label [#3]: 'T3' at (3, 4) with prio 1 and elim-t: 7
+    /// ```
+    ///
     pub fn to_string(&self, level: i32, data: &Vec<Root>) -> String {
         // prefix is level x p
         let p = "    ";
@@ -133,6 +178,10 @@ impl Root {
     }
 }
 
+///
+/// The struct represents a reference to a root node and contains all the
+/// information required to construct the 3D PST
+///
 #[derive(Debug)]
 struct RootRef {
     m_x: f64,
@@ -143,6 +192,9 @@ struct RootRef {
 }
 
 impl RootRef {
+    ///
+    /// Initialize a new root ref
+    ///
     fn new(r: &Root, idx: usize) -> RootRef {
         RootRef {
             m_t: r.m_data.get_t(),
@@ -153,6 +205,9 @@ impl RootRef {
         }
     }
 
+    ///
+    /// Compare two Root refs with respect to the t value.
+    ///
     fn order_by_t(first: &Self, second: &Self) -> Ordering {
         if first.m_t < second.m_t {
             Ordering::Less
@@ -163,6 +218,9 @@ impl RootRef {
         }
     }
 
+    ///
+    /// Compare two Root refs with respect to the x value.
+    ///
     fn order_by_x(first: &Self, second: &Self) -> Ordering {
         if first.m_x < second.m_x {
             Ordering::Less
@@ -173,6 +231,9 @@ impl RootRef {
         }
     }
 
+    ///
+    /// Compare two Root refs with respect to the y value.
+    ///
     fn order_by_y(first: &Self, second: &Self) -> Ordering {
         if first.m_y < second.m_y {
             Ordering::Less
@@ -184,6 +245,9 @@ impl RootRef {
     }
 }
 
+///
+/// In the RootRef vector find the index of the root with the maximum t value.
+///
 fn find_root_idx(refs: &mut Vec<RootRef>) -> usize {
     let mut max_t = 0.;
     let mut max_idx = 0;
@@ -200,6 +264,19 @@ fn find_root_idx(refs: &mut Vec<RootRef>) -> usize {
     r.m_idx
 }
 
+///
+/// From the given RootRef vector construct the subtree and update the
+/// corresponding root nodes in the data vector.
+///
+/// The element with the maximum t value will be set as root with the split type
+/// X. The remaining elements will sorted by x. The split value is the x
+/// of item floor(|root_refs| / 2) and the elements are splitted into <= and >.
+/// From the <= elements the left subtree is constructed as y-root recursively.
+/// Same for the > elements as the right subtree.
+///
+/// For the nodes in data that are referenced by RootRefs in root_refs the
+/// corresponding Roots are updated accordingly.
+///
 fn create_root_x(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize {
     assert!(!root_refs.is_empty());
 
@@ -257,6 +334,19 @@ fn create_root_x(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize
     root_idx
 }
 
+///
+/// From the given RootRef vector construct the subtree and update the
+/// corresponding root nodes in the data vector.
+///
+/// The element with the maximum t value will be set as root with the split type
+/// Y. The remaining elements will sorted by y. The split value is the y
+/// of item floor(|root_refs| / 2) and the elements are splitted into <= and >.
+/// From the <= elements the left subtree is constructed as x-root recursively.
+/// Same for the > elements as the right subtree.
+///
+/// For the nodes in data that are referenced by RootRefs in root_refs the
+/// corresponding Roots are updated accordingly.
+///
 fn create_root_y(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize {
     assert!(!root_refs.is_empty());
 
@@ -310,4 +400,31 @@ fn create_root_y(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize
     r.m_right_child = right_child_idx;
 
     root_idx
+}
+
+#[test]
+fn test_root_new() {
+    let r = Root::new(Label::new(1., 2., 9., 1, 1, "A".to_string()));
+    
+    assert!(r.m_t == 9.);
+    assert!(*r.m_data.get_label() == "A".to_string());
+    assert!(r.m_type == SplitDimension::UNDEF);
+}
+
+#[test]
+fn test_pst_init() {
+    let mut f : Vec<Root> = Vec::new();
+    f.push(Root::new(Label::new(1., 2., 9., 1, 1, "A".to_string())));
+    f.push(Root::new(Label::new(2., 3., 8., 2, 1, "B".to_string())));
+    f.push(Root::new(Label::new(3., 4., 7., 3, 1, "C".to_string())));
+    
+    let root_idx = Root::init_pst3d(&mut f);
+    assert!(root_idx == 0);
+    
+    assert!(f[root_idx].m_type == SplitDimension::X);
+    assert!(f[root_idx].m_left_child.is_some());
+    assert!(f[root_idx].m_right_child.is_some());
+    
+    assert!(f[root_idx].m_left_child.unwrap() == 1);
+    assert!(f[root_idx].m_right_child.unwrap() == 2);
 }

@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Filip Krumpe <filip.krumpe@fmi.uni-stuttgart.de>"]
 
 [lib]
-name = "runtime_datastructure"
-crate-type = ["dylib"]
+name = "rt_datastructure"
+crate-type = ["dylib", "rlib"]
 
 [dependencies]
 lazy_static = "0.2.6"

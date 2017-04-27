@@ -1,3 +1,8 @@
+///
+/// A module to parse lines strings and create a corresponding label object.
+///
+/// The strings must be of the form defined in the [Module description](../index.html)
+/// 
 pub mod parse;
 
 use std::error::Error;
@@ -7,7 +12,13 @@ use std::io::BufReader;
 
 use primitives::label::Label;
 
-
+///
+/// import the label elimination data given by the file at 'path' into a vector
+///
+/// # Errors
+///   * if the file path does not match any file in the file system
+///   * if the number of labels does not match the specified number of labels
+///
 pub fn import_labels(path: &String) -> Result<Vec<Label>, Box<Error>> {
     let mut result: Vec<Label> = Vec::new();
 
@@ -30,7 +41,10 @@ pub fn import_labels(path: &String) -> Result<Vec<Label>, Box<Error>> {
         result.push(parse::parse_label(&line));
     }
 
-    assert_eq!(total, result.len());
+    if (total != result.len()) {
+        return Err(From::from("Specified number of labels does not match real label size!"));
+    }
+
 
     Ok(result)
 }

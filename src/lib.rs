@@ -4,8 +4,54 @@ extern crate lazy_static;
 extern crate libc;
 extern crate regex;
 
+///
+/// A module providing some primitive geo types.
+///
+/// A BoundingBox (BBox) is a 2 dimensional bounding box.
+///
+/// A Label is a point label with a given 2 dimensional position. It is linked
+/// to an osm object via its osm_id and has a certain priority.
+///
 pub mod primitives;
+
+///
+/// A module that implements a 3 dimensional priority search tree on label data.
+///
+/// The 3 dimensional PST is a priority search tree where the elements are
+/// splitted alternating by their x and y coordinate - similar to kd trees.
+///
+/// The 3d PST allows to find all labels within an half open interval:
+///
+/// ```text
+/// (\infty, t] x [x_min, x_max] x [y_min, y_max]
+/// ```
+///
 pub mod pst_3d;
+
+///
+/// A simple module to import data of label elimination sequences.
+///
+/// The module imports label elimination sequences from files of the form:
+///
+/// ```text
+/// 5
+/// lat lon osm_id priority collision_time label_length size_factor label
+/// 53.143155300000004 8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'
+/// 53.200157000000004 8.528893 253042611 2 1.5769136968447124 1650.0 11.0 'Farge'
+/// 53.170524900000004 8.6238803 2147118476 3 2.2440622447579543 2880.0 12.0 'Vegesack'
+/// 53.5522264 8.5865509 660314734 4 4.751763965397364 7260.0 22.0 'Bremerhaven'
+/// 53.0758196 8.8071646 20982927 5 3686.835042292192 4320.0 24.0 'Bremen'
+/// ```
+///
+/// Where the first line contains the number of elements<br>
+/// The second line is a standard header<br>
+/// Each of the following lines defines a label:<br>
+///  * its position (lat, lon)<br>
+///  * its collision time<br>
+///  * its length<br>
+///  * its size factor<br>
+///  * the label string<br>
+///
 pub mod input;
 
 use std::ffi::CStr;
