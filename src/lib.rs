@@ -64,6 +64,15 @@ use std::error::Error;
 use std::io::prelude::*;
 use std::fs::File;
 
+///
+/// C respresentation of a pst instance It also contains and owns the data that was returned at the
+/// last request.
+///
+/// After initializing the pst by the C interface, a pointer DataStructure object will be returned
+/// caller. The pointer should not be modified from outside!
+///
+/// To get data, the struct pointer must be given to the corresponding function as an argument.
+///
 #[repr(C)]
 pub struct DataStructure {
     pst: Option<pst_3d::Pst3d>,
@@ -71,6 +80,11 @@ pub struct DataStructure {
     last_res: Vec<C_Label>,
 }
 
+///
+/// A C representation of a label and its data.
+///
+/// The result of requests of the data structure will be returned as an c-array of these structs.
+///
 #[repr(C)]
 pub struct C_Label {
     x: f64,
@@ -83,6 +97,10 @@ pub struct C_Label {
     label: *mut c_char,
 }
 
+///
+/// A struct represents a basic C_Label vector, i.e. its size and the data (the contained C_Label
+/// objects).
+///
 #[repr(C)]
 pub struct C_Result {
     size: u64,
@@ -90,6 +108,13 @@ pub struct C_Result {
     data: *mut C_Label,
 }
 
+///
+/// Initialize a 3D PST from the file defined by input_path.
+///
+/// The returned pointer to the DataStructure object can be used to request data from the 3D PST.
+///
+/// The given file must match the format specified in the [Input Module](input/index.html).
+///
 #[no_mangle]
 pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
     let c_string = unsafe { CStr::from_ptr(input_path) };
@@ -135,11 +160,17 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
              })
 }
 
+///
+/// Check if the initialization was successfull and the returned DataStructure object is valid.
+///
 #[no_mangle]
 pub extern "C" fn is_good(ds: &mut DataStructure) -> bool {
     return ds.pst.is_some();
 }
 
+///
+/// Get the labels contained in the specified bounding box with a t value >= min_t.
+///
 #[no_mangle]
 pub extern "C" fn get_data(ds: &mut DataStructure,
                            min_t: f64,
