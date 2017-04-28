@@ -94,6 +94,7 @@ pub struct C_Label {
     osm_id: i64,
     prio: i32,
 
+    lbl_fac: f64,
     label: *mut c_char,
 }
 
@@ -204,6 +205,7 @@ pub extern "C" fn get_data(ds: &mut DataStructure,
                       t: e.get_t(),
                       osm_id: e.get_osm_id(),
                       prio: e.get_prio(),
+                      lbl_fac: e.get_label_factor(),
                       label: c_label.into_raw(),
                   });
     }

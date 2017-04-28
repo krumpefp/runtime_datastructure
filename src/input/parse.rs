@@ -98,7 +98,8 @@ pub fn parse_label(s_input: &String) -> Label {
     let elim_t: f64 = fields["elimT"].parse().expect("Could not parse float");
     let osm_id: i64 = fields["osmId"].parse().expect("Could not parse i64");
     let prio: i32 = fields["prio"].parse().expect("Could not parse i32");
+    let lbl_f: f64 = fields["lblFac"].parse().expect("Could not parse f64");
     let label: String = fields["lbl"].to_string();
 
-    Label::new(x, y, elim_t, osm_id, prio, label)
+    Label::new(x, y, elim_t, osm_id, prio, lbl_f, label)
 }

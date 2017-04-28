@@ -127,9 +127,9 @@ impl Root {
     /// A such string will look like:
     ///
     /// ```text
-    ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1 and elim-t: 9\n
-    ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1 and elim-t: 8\n
-    ///   l        x-node (split: NaN): Label [#3]: 'T3' at (3, 4) with prio 1 and elim-t: 7
+    ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1,elim-t: 9 and label factor: 1.5
+    ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1, elim-t: 8 and label factor: 1.5
+    ///   l        x-node (split: NaN): Label [#3]: 'T3' at (3, 4) with prio 1, elim-t: 7 and label factor: 1.5
     /// ```
     ///
     pub fn to_string(&self, level: i32, data: &Vec<Root>) -> String {
@@ -404,7 +404,7 @@ fn create_root_y(mut root_refs: Vec<RootRef>, mut data: &mut Vec<Root>) -> usize
 
 #[test]
 fn test_root_new() {
-    let r = Root::new(Label::new(1., 2., 9., 1, 1, "A".to_string()));
+    let r = Root::new(Label::new(1., 2., 9., 1, 1, 1.5, "A".to_string()));
 
     assert!(r.m_t == 9.);
     assert!(*r.m_data.get_label() == "A".to_string());
@@ -414,9 +414,9 @@ fn test_root_new() {
 #[test]
 fn test_pst_init() {
     let mut f: Vec<Root> = Vec::new();
-    f.push(Root::new(Label::new(1., 2., 9., 1, 1, "A".to_string())));
-    f.push(Root::new(Label::new(2., 3., 8., 2, 1, "B".to_string())));
-    f.push(Root::new(Label::new(3., 4., 7., 3, 1, "C".to_string())));
+    f.push(Root::new(Label::new(1., 2., 9., 1, 1, 1.5, "A".to_string())));
+    f.push(Root::new(Label::new(2., 3., 8., 2, 1, 1.5, "B".to_string())));
+    f.push(Root::new(Label::new(3., 4., 7., 3, 1, 1.5, "C".to_string())));
 
     let root_idx = Root::init_pst3d(&mut f);
     assert!(root_idx == 0);

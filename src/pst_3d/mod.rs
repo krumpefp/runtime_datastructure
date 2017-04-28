@@ -30,16 +30,16 @@ impl Pst3d {
     /// use rt_datastructure::pst_3d;
     ///
     /// let mut v = Vec::new();
-    /// v.push(label::Label::new(1., 2., 9., 1, 1, "T1".to_string()));
-    /// v.push(label::Label::new(2., 3., 8., 2, 1, "T2".to_string()));
-    /// v.push(label::Label::new(3., 4., 7., 3, 1, "T3".to_string()));
-    /// v.push(label::Label::new(3., 5., 7., 4, 1, "T4".to_string()));
-    /// v.push(label::Label::new(4., 6., 6., 5, 1, "T5".to_string()));
-    /// v.push(label::Label::new(5., 7., 5., 6, 1, "T6".to_string()));
-    /// v.push(label::Label::new(6., 8., 4., 7, 1, "T7".to_string()));
-    /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
-    /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
-    /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
+    /// v.push(label::Label::new(1., 2., 9., 1, 1, 1.5, "T1".to_string()));
+    /// v.push(label::Label::new(2., 3., 8., 2, 1, 1.5, "T2".to_string()));
+    /// v.push(label::Label::new(3., 4., 7., 3, 1, 1.5, "T3".to_string()));
+    /// v.push(label::Label::new(3., 5., 7., 4, 1, 1.5, "T4".to_string()));
+    /// v.push(label::Label::new(4., 6., 6., 5, 1, 1.5, "T5".to_string()));
+    /// v.push(label::Label::new(5., 7., 5., 6, 1, 1.5, "T6".to_string()));
+    /// v.push(label::Label::new(6., 8., 4., 7, 1, 1.5, "T7".to_string()));
+    /// v.push(label::Label::new(7., 9., 3., 8, 1, 1.5, "T8".to_string()));
+    /// v.push(label::Label::new(8., 10., 2., 9, 1, 1.5, "T9".to_string()));
+    /// v.push(label::Label::new(9., 11., 1., 10, 1, 1.5, "T10".to_string()));
     ///
     /// let t = pst_3d::Pst3d::new(v.clone());
     /// ```
@@ -76,16 +76,16 @@ impl Pst3d {
     /// use rt_datastructure::pst_3d;
     ///
     /// let mut v = Vec::new();
-    /// v.push(label::Label::new(1., 2., 9., 1, 1, "T1".to_string()));
-    /// v.push(label::Label::new(2., 3., 8., 2, 1, "T2".to_string()));
-    /// v.push(label::Label::new(3., 4., 7., 3, 1, "T3".to_string()));
-    /// v.push(label::Label::new(3., 5., 7., 4, 1, "T4".to_string()));
-    /// v.push(label::Label::new(4., 6., 6., 5, 1, "T5".to_string()));
-    /// v.push(label::Label::new(5., 7., 5., 6, 1, "T6".to_string()));
-    /// v.push(label::Label::new(6., 8., 4., 7, 1, "T7".to_string()));
-    /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
-    /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
-    /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
+    /// v.push(label::Label::new(1., 2., 9., 1, 1, 1.5, "T1".to_string()));
+    /// v.push(label::Label::new(2., 3., 8., 2, 1, 1.5, "T2".to_string()));
+    /// v.push(label::Label::new(3., 4., 7., 3, 1, 1.5, "T3".to_string()));
+    /// v.push(label::Label::new(3., 5., 7., 4, 1, 1.5, "T4".to_string()));
+    /// v.push(label::Label::new(4., 6., 6., 5, 1, 1.5, "T5".to_string()));
+    /// v.push(label::Label::new(5., 7., 5., 6, 1, 1.5, "T6".to_string()));
+    /// v.push(label::Label::new(6., 8., 4., 7, 1, 1.5, "T7".to_string()));
+    /// v.push(label::Label::new(7., 9., 3., 8, 1, 1.5, "T8".to_string()));
+    /// v.push(label::Label::new(8., 10., 2., 9, 1, 1.5, "T9".to_string()));
+    /// v.push(label::Label::new(9., 11., 1., 10, 1, 1.5, "T10".to_string()));
     ///
     /// let t = pst_3d::Pst3d::new(v);
     ///
@@ -108,35 +108,44 @@ impl Pst3d {
     ///
     /// # Examples
     /// ```
-    /// use rt_datastructure::primitives::{label, bbox};
+    /// use rt_datastructure::primitives::label;
     /// use rt_datastructure::pst_3d;
     ///
     /// let mut v = Vec::new();
-    /// v.push(label::Label::new(1., 2., 9., 1, 1, "T1".to_string()));
-    /// v.push(label::Label::new(2., 3., 8., 2, 1, "T2".to_string()));
-    /// v.push(label::Label::new(3., 4., 7., 3, 1, "T3".to_string()));
-    /// v.push(label::Label::new(3., 5., 7., 4, 1, "T4".to_string()));
-    /// v.push(label::Label::new(4., 6., 6., 5, 1, "T5".to_string()));
-    /// v.push(label::Label::new(5., 7., 5., 6, 1, "T6".to_string()));
-    /// v.push(label::Label::new(6., 8., 4., 7, 1, "T7".to_string()));
-    /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
-    /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
-    /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
+    /// v.push(label::Label::new(1., 2., 9., 1, 1, 1.5, "T1".to_string()));
+    /// v.push(label::Label::new(2., 3., 8., 2, 1, 1.5, "T2".to_string()));
+    /// v.push(label::Label::new(3., 4., 7., 3, 1, 1.5, "T3".to_string()));
+    /// v.push(label::Label::new(3., 5., 7., 4, 1, 1.5, "T4".to_string()));
+    /// v.push(label::Label::new(4., 6., 6., 5, 1, 1.5, "T5".to_string()));
+    /// v.push(label::Label::new(5., 7., 5., 6, 1, 1.5, "T6".to_string()));
+    /// v.push(label::Label::new(6., 8., 4., 7, 1, 1.5, "T7".to_string()));
+    /// v.push(label::Label::new(7., 9., 3., 8, 1, 1.5, "T8".to_string()));
+    /// v.push(label::Label::new(8., 10., 2., 9, 1, 1.5, "T9".to_string()));
+    /// v.push(label::Label::new(9., 11., 1., 10, 1, 1.5, "T10".to_string()));
     ///
     /// let t = pst_3d::Pst3d::new(v);
     ///
     /// let res_string = "\
-    ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1 and elim-t: 9\n\
-    ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1 and elim-t: 8\n\
-    ///   l        x-node (split: NaN): Label [#3]: 'T3' at (3, 4) with prio 1 and elim-t: 7\n\
-    ///   r        x-node (split: 4): Label [#4]: 'T4' at (3, 5) with prio 1 and elim-t: 7\n\
-    ///   l            y-node (split: NaN): Label [#5]: 'T5' at (4, 6) with prio 1 and elim-t: 6\n\
-    ///   r    y-node (split: 9.5): Label [#6]: 'T6' at (5, 7) with prio 1 and elim-t: 5\n\
-    ///   l        x-node (split: 7): Label [#7]: 'T7' at (6, 8) with prio 1 and elim-t: 4\n\
-    ///   l            y-node (split: NaN): Label [#8]: 'T8' at (7, 9) with prio 1 and elim-t: 3\n\
-    ///   r        x-node (split: 9): Label [#9]: 'T9' at (8, 10) with prio 1 and elim-t: 2\n\
-    ///   l            y-node (split: NaN): Label [#10]: 'T10' at (9, 11) with prio 1 and elim-t: \
-    ///                                                                                          1\
+    ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1, elim-t: 9 and label \
+    ///                                                                              factor: 1.5\n\
+    ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1, elim-t: 8 and label \
+    ///                                                                              factor: 1.5\n\
+    ///   l        x-node (split: NaN): Label [#3]: 'T3' at (3, 4) with prio 1, elim-t: 7 and \
+    ///                                                                        label factor: 1.5\n\
+    ///   r        x-node (split: 4): Label [#4]: 'T4' at (3, 5) with prio 1, elim-t: 7 and label \
+    ///                                                                              factor: 1.5\n\
+    ///   l            y-node (split: NaN): Label [#5]: 'T5' at (4, 6) with prio 1, elim-t: 6 and \
+    ///                                                                        label factor: 1.5\n\
+    ///   r    y-node (split: 9.5): Label [#6]: 'T6' at (5, 7) with prio 1, elim-t: 5 and label \
+    ///                                                                              factor: 1.5\n\
+    ///   l        x-node (split: 7): Label [#7]: 'T7' at (6, 8) with prio 1, elim-t: 4 and label \
+    ///                                                                              factor: 1.5\n\
+    ///   l            y-node (split: NaN): Label [#8]: 'T8' at (7, 9) with prio 1, elim-t: 3 and \
+    ///                                                                        label factor: 1.5\n\
+    ///   r        x-node (split: 9): Label [#9]: 'T9' at (8, 10) with prio 1, elim-t: 2 and \
+    ///                                                                        label factor: 1.5\n\
+    ///   l            y-node (split: NaN): Label [#10]: 'T10' at (9, 11) with prio 1, elim-t: 1 \
+    ///                                                                      and label factor: 1.5\
     ///   ".to_string();
     /// assert!(t.to_string() == res_string);
     /// ```

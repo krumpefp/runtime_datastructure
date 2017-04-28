@@ -24,9 +24,9 @@ impl BBox {
     /// use rt_datastructure::primitives::{bbox, label};
     ///
     /// let bb = bbox::BBox::new(0., 0., 1., 1.);
-    /// let not_contained = label::Label::new(-1., -1., 0., 0, 0, "Not contained".to_string());
-    /// let at_the_border = label::Label::new(0., 0., 0., 0, 0, "Not contained".to_string());
-    /// let contained = label::Label::new(0.5, 0.5, 0., 0, 0, "Not contained".to_string());
+    /// let not_contained = label::Label::new(-1., -1., 0., 0, 0, 1., "Not contained".to_string());
+    /// let at_the_border = label::Label::new(0., 0., 0., 0, 0, 1., "Not contained".to_string());
+    /// let contained = label::Label::new(0.5, 0.5, 0., 0, 0, 1., "Not contained".to_string());
     ///
     /// assert!(bb.is_contained(&contained));
     /// assert!(bb.is_contained(&at_the_border));
@@ -58,7 +58,7 @@ impl BBox {
     /// use rt_datastructure::primitives::{bbox, label};
     ///
     /// let bb = bbox::BBox::new_empty();
-    /// let l = label::Label::new(0., 0., 0., 0, 0, "Not contained".to_string());
+    /// let l = label::Label::new(0., 0., 0., 0, 0, 1., "Not contained".to_string());
     ///
     /// assert!(!bb.is_contained(&l));
     /// ```
@@ -82,10 +82,10 @@ impl BBox {
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
     ///
-    /// let L = label::Label::new(0., 0., 0., 0, 0, "Defining label".to_string());
+    /// let L = label::Label::new(0., 0., 0., 0, 0, 1., "Defining label".to_string());
     /// let bb = bbox::BBox::new_from_point(&L);
-    /// let contained = label::Label::new(0., 0., 0., 0, 0, "Contained".to_string());
-    /// let not_contained = label::Label::new(1., 0., 0., 0, 0, "Not contained".to_string());
+    /// let contained = label::Label::new(0., 0., 0., 0, 0, 1., "Contained".to_string());
+    /// let not_contained = label::Label::new(1., 0., 0., 0, 0, 1., "Not contained".to_string());
     ///
     /// assert!(bb.is_contained(&L));
     /// assert!(bb.is_contained(&contained));
@@ -110,7 +110,7 @@ impl BBox {
     /// use rt_datastructure::primitives::{bbox, label};
     ///
     /// let mut bb = bbox::BBox::new(0., 0., 1., 1.);
-    /// let tba = label::Label::new(-1., -1., 0., 0, 0, "To be added".to_string());
+    /// let tba = label::Label::new(-1., -1., 0., 0, 0, 1., "To be added".to_string());
     /// assert!(!bb.is_contained(&tba));
     /// bb.add_to_box(&tba);
     /// assert!(bb.is_contained(&tba));
@@ -134,7 +134,7 @@ impl BBox {
     /// let mut bb = bbox::BBox::new(-1., -1., 0., 0.);
     ///
     /// let bb1 = bbox::BBox::new(0., 0., 1., 1.);
-    /// let c1 = label::Label::new(0.5, 0.5, 0., 0, 0, "Contained in 1".to_string());
+    /// let c1 = label::Label::new(0.5, 0.5, 0., 0, 0, 1., "Contained in 1".to_string());
     /// assert!(bb1.is_contained(&c1));
     /// assert!(!bb.is_contained(&c1));
     ///
@@ -225,9 +225,9 @@ impl BBox {
     /// use rt_datastructure::primitives::{bbox, label};
     ///
     /// let bb = bbox::BBox::new(-1., -1., 1., 1.);
-    /// let on_border = label::Label::new(-1., -1., 0., 0, 0, "On border".to_string());
-    /// let contained = label::Label::new(0., 0., 0., 0, 0, "Contained".to_string());
-    /// let not_contained = label::Label::new(-1., -2., 0., 0, 0, "Not contained".to_string());
+    /// let on_border = label::Label::new(-1., -1., 0., 0, 0, 1., "On border".to_string());
+    /// let contained = label::Label::new(0., 0., 0., 0, 0, 1., "Contained".to_string());
+    /// let not_contained = label::Label::new(-1., -2., 0., 0, 0, 1., "Not contained".to_string());
     ///
     /// assert!(bb.is_contained(&on_border));
     /// assert!(bb.is_contained(&contained));

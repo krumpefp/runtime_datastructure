@@ -13,6 +13,7 @@ pub struct Label {
     m_osm_id: i64,
     m_prio: i32,
 
+    m_lbl_fac : f64,
     m_label: String,
 }
 
@@ -25,18 +26,36 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 90., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 90., 0.9, 1234567, 16, 1.5, "Test".to_string());
     /// ```
     ///
-    pub fn new(x: f64, y: f64, t: f64, osm_id: i64, prio: i32, label: String) -> Label {
+    pub fn new(x: f64, y: f64, t: f64, osm_id: i64, prio: i32, lbl_f : f64, label: String) -> Label {
         Label {
             m_x: x,
             m_y: y,
             m_t: t,
             m_osm_id: osm_id,
             m_prio: prio,
+            m_lbl_fac: lbl_f,
             m_label: label,
         }
+    }
+
+    ///
+    /// Get the label factor.
+    ///
+    ///
+    /// # Examples
+    /// ```
+    /// use rt_datastructure::primitives::label;
+    ///
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
+    ///
+    /// assert!(l.get_label_factor() == 1.5);
+    /// ```
+    ///
+    pub fn get_label_factor(&self) -> f64 {
+        self.m_lbl_fac
     }
 
     ///
@@ -47,7 +66,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(*l.get_label() == "Test".to_string());
     /// ```
@@ -65,7 +84,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(l.get_osm_id() == 1234567);
     /// ```
@@ -83,7 +102,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(l.get_prio() == 16);
     /// ```
@@ -101,7 +120,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(l.get_t() == 0.9);
     /// ```
@@ -119,7 +138,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(l.get_x() == 90.);
     /// ```
@@ -137,7 +156,7 @@ impl Label {
     /// ```
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// assert!(l.get_y() == 45.);
     /// ```
@@ -154,9 +173,9 @@ impl Label {
     /// use std::cmp::Ordering;
     /// use rt_datastructure::primitives::label;
     ///
-    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, "Test1".to_string());
-    /// let p2 = label::Label::new(90., 90., 0.8, 1234568, 16, "Test2".to_string());
-    /// let p3 = label::Label::new(90., 90., 0.8, 1234569, 16, "Test3".to_string());
+    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, 1.5, "Test1".to_string());
+    /// let p2 = label::Label::new(90., 90., 0.8, 1234568, 16, 1.5, "Test2".to_string());
+    /// let p3 = label::Label::new(90., 90., 0.8, 1234569, 16, 1.5, "Test3".to_string());
     /// assert!(label::Label::order_t(&p1, &p2) == Ordering::Greater);
     /// assert!(label::Label::order_t(&p2, &p3) == Ordering::Equal);
     /// assert!(label::Label::order_t(&p3, &p1) == Ordering::Less);
@@ -182,9 +201,9 @@ impl Label {
     /// use std::cmp::Ordering;
     /// use rt_datastructure::primitives::label;
     ///
-    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, "Test1".to_string());
-    /// let p2 = label::Label::new(45., 90., 0.9, 1234568, 16, "Test2".to_string());
-    /// let p3 = label::Label::new(45., 90., 0.9, 1234569, 16, "Test3".to_string());
+    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, 1.5, "Test1".to_string());
+    /// let p2 = label::Label::new(45., 90., 0.9, 1234568, 16, 1.5, "Test2".to_string());
+    /// let p3 = label::Label::new(45., 90., 0.9, 1234569, 16, 1.5, "Test3".to_string());
     /// assert!(label::Label::order_x(&p1, &p2) == Ordering::Greater);
     /// assert!(label::Label::order_x(&p2, &p3) == Ordering::Equal);
     /// assert!(label::Label::order_x(&p3, &p1) == Ordering::Less);
@@ -211,9 +230,9 @@ impl Label {
     /// use std::cmp::Ordering;
     /// use rt_datastructure::primitives::label;
     ///
-    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, "Test1".to_string());
-    /// let p2 = label::Label::new(90., 45., 0.9, 1234568, 16, "Test2".to_string());
-    /// let p3 = label::Label::new(90., 45., 0.9, 1234569, 16, "Test3".to_string());
+    /// let p1 = label::Label::new(90., 90., 0.9, 1234567, 16, 1.5, "Test1".to_string());
+    /// let p2 = label::Label::new(90., 45., 0.9, 1234568, 16, 1.5, "Test2".to_string());
+    /// let p3 = label::Label::new(90., 45., 0.9, 1234569, 16, 1.5, "Test3".to_string());
     /// assert!(label::Label::order_y(&p1, &p2) == Ordering::Greater);
     /// assert!(label::Label::order_y(&p2, &p3) == Ordering::Equal);
     /// assert!(label::Label::order_y(&p3, &p1) == Ordering::Less);
@@ -236,23 +255,24 @@ impl Label {
     ///
     /// # Examples
     /// ```
-    /// use std::cmp::Ordering;
     /// use rt_datastructure::primitives::label;
     ///
-    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, "Test".to_string());
+    /// let l = label::Label::new(90., 45., 0.9, 1234567, 16, 1.5, "Test".to_string());
     ///
     /// let s = l.to_string();
-    /// assert!(s == "Label [#1234567]: 'Test' at (90, 45) with prio 16 and elim-t: 0.9")
+    /// assert!(s == "Label [#1234567]: 'Test' at (90, 45) with prio 16, elim-t: 0.9 and label \
+    ///                                                                               factor: 1.5")
     /// ```
     ///
     pub fn to_string(&self) -> String {
-        format!("Label [#{}]: '{}' at ({}, {}) with prio {} and elim-t: {}",
+        format!("Label [#{}]: '{}' at ({}, {}) with prio {}, elim-t: {} and label factor: {}",
                 self.m_osm_id,
                 self.m_label,
                 self.m_x,
                 self.m_y,
                 self.m_prio,
-                self.m_t)
+                self.m_t,
+                self.m_lbl_fac)
     }
 }
 
@@ -263,6 +283,7 @@ impl Clone for Label {
                   self.m_t,
                   self.m_osm_id,
                   self.m_prio,
+                  self.m_lbl_fac,
                   self.m_label.clone())
     }
 }
