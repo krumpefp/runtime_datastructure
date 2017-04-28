@@ -40,10 +40,10 @@ impl Pst3d {
     /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
     /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
     /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
-    /// 
+    ///
     /// let t = pst_3d::Pst3d::new(v.clone());
     /// ```
-    /// 
+    ///
     pub fn new(mut labels: Vec<Label>) -> Pst3d {
         labels.sort_by(Label::order_t);
         labels.reverse();
@@ -86,16 +86,16 @@ impl Pst3d {
     /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
     /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
     /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
-    /// 
+    ///
     /// let t = pst_3d::Pst3d::new(v);
-    /// 
+    ///
     /// let bb = bbox::BBox::new(4., 5., 7., 8.);
     /// let r = t.get(&bb, 4.);
-    /// 
+    ///
     /// // resulting labels are T5 to  T7
     /// assert!(r.len() == 3);
     /// ```
-    /// 
+    ///
     pub fn get<'a>(&'a self, bbox: &BBox, min_t: f64) -> Vec<&'a Label> {
         self.m_data[self.m_root_idx].get(&bbox, min_t, &self.m_data)
     }
@@ -103,8 +103,8 @@ impl Pst3d {
     ///
     /// Create a human readable string representation of the tree.
     ///
-    /// The function returns a multiline string with one row for each tree
-    /// node. Large trees will produce a huge multiline string!
+    /// The function returns a multiline string with one row for each tree node. Large trees will
+    /// produce a huge multiline string!
     ///
     /// # Examples
     /// ```
@@ -122,9 +122,9 @@ impl Pst3d {
     /// v.push(label::Label::new(7., 9., 3., 8, 1, "T8".to_string()));
     /// v.push(label::Label::new(8., 10., 2., 9, 1, "T9".to_string()));
     /// v.push(label::Label::new(9., 11., 1., 10, 1, "T10".to_string()));
-    /// 
+    ///
     /// let t = pst_3d::Pst3d::new(v);
-    /// 
+    ///
     /// let res_string = "\
     ///   x-node (split: 4.5): Label [#1]: 'T1' at (1, 2) with prio 1 and elim-t: 9\n\
     ///   l    y-node (split: 4.5): Label [#2]: 'T2' at (2, 3) with prio 1 and elim-t: 8\n\
@@ -135,10 +135,12 @@ impl Pst3d {
     ///   l        x-node (split: 7): Label [#7]: 'T7' at (6, 8) with prio 1 and elim-t: 4\n\
     ///   l            y-node (split: NaN): Label [#8]: 'T8' at (7, 9) with prio 1 and elim-t: 3\n\
     ///   r        x-node (split: 9): Label [#9]: 'T9' at (8, 10) with prio 1 and elim-t: 2\n\
-    ///   l            y-node (split: NaN): Label [#10]: 'T10' at (9, 11) with prio 1 and elim-t: 1".to_string();
+    ///   l            y-node (split: NaN): Label [#10]: 'T10' at (9, 11) with prio 1 and elim-t: \
+    ///                                                                                          1\
+    ///   ".to_string();
     /// assert!(t.to_string() == res_string);
     /// ```
-    /// 
+    ///
     pub fn to_string(&self) -> String {
         self.m_data[self.m_root_idx].to_string(0, &self.m_data)
     }

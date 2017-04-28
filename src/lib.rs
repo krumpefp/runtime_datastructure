@@ -9,16 +9,16 @@ extern crate regex;
 ///
 /// A BoundingBox (BBox) is a 2 dimensional bounding box.
 ///
-/// A Label is a point label with a given 2 dimensional position. It is linked
-/// to an osm object via its osm_id and has a certain priority.
+/// A Label is a point label with a given 2 dimensional position. It is linked to an osm object via
+/// its osm_id and has a certain priority.
 ///
 pub mod primitives;
 
 ///
 /// A module that implements a 3 dimensional priority search tree on label data.
 ///
-/// The 3 dimensional PST is a priority search tree where the elements are
-/// splitted alternating by their x and y coordinate - similar to kd trees.
+/// The 3 dimensional PST is a priority search tree where the elements are splitted alternating by
+/// their x and y coordinate - similar to kd trees.
 ///
 /// The 3d PST allows to find all labels within an half open interval:
 ///
@@ -44,7 +44,9 @@ pub mod pst_3d;
 /// ```
 ///
 /// Where the first line contains the number of elements<br>
+///
 /// The second line is a standard header<br>
+/// 
 /// Each of the following lines defines a label:<br>
 ///  * its position (lat, lon)<br>
 ///  * its collision time<br>

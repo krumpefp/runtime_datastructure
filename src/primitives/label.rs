@@ -3,8 +3,7 @@ use std::cmp::Ordering;
 ///
 /// The label class.
 ///
-/// For more information about the members compare the 
-/// [module description](../index.html)
+/// For more information about the members compare the [module description](../index.html)
 ///
 pub struct Label {
     m_x: f64,

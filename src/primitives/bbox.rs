@@ -4,8 +4,8 @@ use primitives::label::Label;
 
 
 ///
-/// The struct defines an axis aligned rectangular area in 2 dimension via min
-/// and max in each dimension X and Y.
+/// The struct defines an axis aligned rectangular area in 2 dimension via min and max in each
+/// dimension X and Y.
 ///
 pub struct BBox {
     m_max_x: f64,
@@ -22,7 +22,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let bb = bbox::BBox::new(0., 0., 1., 1.);
     /// let not_contained = label::Label::new(-1., -1., 0., 0, 0, "Not contained".to_string());
     /// let at_the_border = label::Label::new(0., 0., 0., 0, 0, "Not contained".to_string());
@@ -43,12 +43,12 @@ impl BBox {
             m_min_y: min_y,
         }
     }
-    
+
     ///
     /// Initialize a new empty bounding box.
     ///
-    /// An empty bounding box might be used to construct a bounding box that
-    /// spans a set of labels or boudning boxes or a mixture of both.
+    /// An empty bounding box might be used to construct a bounding box that spans a set of labels
+    /// or boudning boxes or a mixture of both.
     ///
     /// For any Label l, is_contained will return false.
     ///
@@ -56,7 +56,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let bb = bbox::BBox::new_empty();
     /// let l = label::Label::new(0., 0., 0., 0, 0, "Not contained".to_string());
     ///
@@ -71,7 +71,7 @@ impl BBox {
             m_min_y: f64::INFINITY,
         }
     }
-    
+
     ///
     /// Initialize a new bounding box that contains the given label L
     ///
@@ -81,7 +81,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let L = label::Label::new(0., 0., 0., 0, 0, "Defining label".to_string());
     /// let bb = bbox::BBox::new_from_point(&L);
     /// let contained = label::Label::new(0., 0., 0., 0, 0, "Contained".to_string());
@@ -108,7 +108,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let mut bb = bbox::BBox::new(0., 0., 1., 1.);
     /// let tba = label::Label::new(-1., -1., 0., 0, 0, "To be added".to_string());
     /// assert!(!bb.is_contained(&tba));
@@ -130,7 +130,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let mut bb = bbox::BBox::new(-1., -1., 0., 0.);
     ///
     /// let bb1 = bbox::BBox::new(0., 0., 1., 1.);
@@ -156,7 +156,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::bbox;
-    /// 
+    ///
     /// let bb = bbox::BBox::new(1., 2., 3., 4.);
     /// assert!(bb.get_max_x() == 3.);
     /// ```
@@ -172,7 +172,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::bbox;
-    /// 
+    ///
     /// let bb = bbox::BBox::new(1., 2., 3., 4.);
     /// assert!(bb.get_max_y() == 4.);
     /// ```
@@ -188,7 +188,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::bbox;
-    /// 
+    ///
     /// let bb = bbox::BBox::new(1., 2., 3., 4.);
     /// assert!(bb.get_min_x() == 1.);
     /// ```
@@ -204,7 +204,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::bbox;
-    /// 
+    ///
     /// let bb = bbox::BBox::new(1., 2., 3., 4.);
     /// assert!(bb.get_min_y() == 2.);
     /// ```
@@ -212,18 +212,18 @@ impl BBox {
     pub fn get_min_y(&self) -> f64 {
         self.m_min_y
     }
-    
+
     ///
     /// Check if a label is contained in the bounding box or not.
     ///
-    /// A label is contained in the box if its coordinates are >= min and <= max
-    /// of the respective dimension
+    /// A label is contained in the box if its coordinates are >= min and <= max of the respective
+    /// dimension.
     ///
     ///
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::{bbox, label};
-    /// 
+    ///
     /// let bb = bbox::BBox::new(-1., -1., 1., 1.);
     /// let on_border = label::Label::new(-1., -1., 0., 0, 0, "On border".to_string());
     /// let contained = label::Label::new(0., 0., 0., 0, 0, "Contained".to_string());
@@ -248,7 +248,7 @@ impl BBox {
     /// # Examples
     /// ```
     /// use rt_datastructure::primitives::bbox;
-    /// 
+    ///
     /// let bb = bbox::BBox::new(1., 2., 3., 4.);
     /// let s = bb.to_string();
     ///

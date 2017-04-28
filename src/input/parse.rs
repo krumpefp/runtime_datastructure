@@ -2,7 +2,7 @@
 /// A module to parse lines strings and create a corresponding label object.
 ///
 /// The strings must be of the form defined in the [Module description](index.html)
-/// 
+///
 
 use regex::Regex;
 
@@ -15,8 +15,9 @@ use primitives::label::Label;
 /// ```
 /// use rt_datastructure::input::parse;
 /// use rt_datastructure::primitives::label;
-/// 
-/// let s = "53.143155300000004 8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'".to_string();
+///
+/// let s = "53.143155300000004 8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 \
+///          'Timmersloh'".to_string();
 /// let v = parse::validate_label(&s);
 /// assert!(v);
 /// ```
@@ -24,7 +25,7 @@ use primitives::label::Label;
 /// ```
 /// use rt_datastructure::input::parse;
 /// use rt_datastructure::primitives::label;
-/// 
+///
 /// let s = "8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'".to_string();
 /// let v = parse::validate_label(&s);
 /// assert!(!v);
@@ -56,15 +57,16 @@ pub fn validate_label(s_input: &String) -> bool {
 /// ```
 /// use rt_datastructure::input::parse;
 /// use rt_datastructure::primitives::label;
-/// 
-/// let s = "53.143155300000004 8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'".to_string();
+///
+/// let s = "53.143155300000004 8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 \
+///          'Timmersloh'".to_string();
 /// let l = parse::parse_label(&s);
 /// ```
 ///
 /// ```should_panic
 /// use rt_datastructure::input::parse;
 /// use rt_datastructure::primitives::label;
-/// 
+///
 /// let s = "8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'".to_string();
 /// let l = parse::parse_label(&s);
 /// ```
