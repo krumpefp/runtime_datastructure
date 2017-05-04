@@ -87,8 +87,7 @@ use std::io::prelude::*;
 use std::fs::File;
 
 ///
-/// C respresentation of a pst instance It also contains and owns the data that was returned at the
-/// last request.
+/// C representation of a pst instance.
 ///
 /// After initializing the pst by the C interface, a pointer DataStructure object will be returned
 /// caller. The pointer should not be modified from outside!
@@ -98,8 +97,6 @@ use std::fs::File;
 #[repr(C)]
 pub struct DataStructure {
     pst: Option<pst_3d::Pst3d>,
-
-    last_res: Vec<C_Label>,
 }
 
 ///
@@ -131,6 +128,7 @@ pub struct C_Result {
     data: *mut C_Label,
 }
 
+
 ///
 /// Initialize a 3D PST from the file defined by input_path.
 ///
@@ -144,12 +142,7 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
 
     let input_path = match c_string.to_str() {
         Ok(path) => path.to_string(),
-        Err(_) => {
-            return Box::new(DataStructure {
-                                pst: None,
-                                last_res: Vec::new(),
-                            })
-        }
+        Err(_) => return Box::new(DataStructure { pst: None }),
     };
 
     // debug
@@ -177,10 +170,7 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
         }
     };
 
-    Box::new(DataStructure {
-                 pst: tree,
-                 last_res: Vec::new(),
-             })
+    Box::new(DataStructure { pst: tree })
 }
 
 ///
@@ -194,22 +184,31 @@ pub extern "C" fn is_good(ds: &mut DataStructure) -> bool {
 ///
 /// Get the labels contained in the specified bounding box with a t value >= min_t.
 ///
+/// The ownership of the result returned by this function is passed to the caller.
+/// To safely deallocate the result pass it to the function `free_result`.
 #[no_mangle]
-pub extern "C" fn get_data(ds: &mut DataStructure,
+pub extern "C" fn get_data(ds: &DataStructure,
                            min_t: f64,
                            min_x: f64,
                            max_x: f64,
                            min_y: f64,
                            max_y: f64)
                            -> C_Result {
+    use std::mem::forget;
+    let mut result;
+    let pointer;
+
     let pst = match ds.pst {
         Some(ref pst) => pst,
         None => {
-            ds.last_res = Vec::new();
+            result = Vec::with_capacity(0);
+            let len = 0;
+            pointer = result.as_mut_ptr();
+            forget(result);
 
             return C_Result {
-                       size: ds.last_res.len() as u64,
-                       data: ds.last_res.as_mut_ptr(),
+                       size: len,
+                       data: pointer,
                    };
         }
     };
@@ -217,35 +216,51 @@ pub extern "C" fn get_data(ds: &mut DataStructure,
     let bb = primitives::bbox::BBox::new(min_x, min_y, max_x, max_y);
     let r = pst.get(&bb, min_t);
 
-    ds.last_res = Vec::new();
+    result = Vec::with_capacity(r.len());
     for e in &r {
         let c_label = CString::new(e.get_label().as_str()).unwrap();
-        ds.last_res
-            .push(C_Label {
-                      x: e.get_x(),
-                      y: e.get_y(),
-                      t: e.get_t(),
-                      osm_id: e.get_osm_id(),
-                      prio: e.get_prio(),
-                      lbl_fac: e.get_label_factor(),
-                      label: c_label.into_raw(),
-                  });
+        result.push(C_Label {
+                        x: e.get_x(),
+                        y: e.get_y(),
+                        t: e.get_t(),
+                        osm_id: e.get_osm_id(),
+                        prio: e.get_prio(),
+                        lbl_fac: e.get_label_factor(),
+                        label: c_label.into_raw(),
+                    });
     }
+    result.shrink_to_fit();
+    let pointer = result.as_mut_ptr();
+    forget(result);
     C_Result {
         size: r.len() as u64,
-        data: ds.last_res.as_mut_ptr(),
+        data: pointer,
     }
+}
+
+///
+/// Deallocate a result returned by `get_data`.
+///
+#[no_mangle]
+pub extern "C" fn free_result(res: C_Result) {
+    unsafe {
+        let vec = Vec::from_raw_parts(res.data, res.size as usize, res.size as usize);
+        for label in vec {
+            let _ = CString::from_raw(label.label);
+        }
+    }
+    drop(res);
 }
 
 
 #[cfg(test)]
 mod tests {
     extern crate rand;
-    
-    
+
+
     const TEST_SIZE: usize = 500;
     const TEST_COUNT: usize = 1;
-    
+
     use rand::{thread_rng, Rng};
 
     use std::collections::HashSet;
@@ -277,7 +292,7 @@ mod tests {
                                      t,
                                      counter as i64,
                                      counter as i32,
-                                     1.0,                  // label factor is not of interesst
+                                     1.0, // label factor is not of interesst
                                      format!("T {}", counter)));
         }
 
@@ -324,7 +339,7 @@ mod tests {
 
         let mut rng = rand::thread_rng();
 
-        for i in 0..TEST_COUNT {
+        for _ in 0..TEST_COUNT {
             let t = rand::random::<f64>();
 
             let min_x = rng.gen_range(data_box.get_min_x(), data_box.get_max_x());
@@ -335,7 +350,7 @@ mod tests {
             let bbox = bbox::BBox::new(min_x, min_y, max_x, max_y);
 
             let res = pskdt.get(&bbox, t);
-            
+
             assert!(get_id_set(&res) == get_id_set_filtered(&instance, &bbox, t));
         }
     }
