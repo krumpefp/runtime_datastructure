@@ -96,7 +96,7 @@ use std::fs::File;
 ///
 #[repr(C)]
 pub struct DataStructure {
-    pst: Option<pst_3d::Pst3d>,
+    pst: Option<pst_3d::GeoPst3d>,
 }
 
 ///
@@ -157,10 +157,10 @@ pub extern "C" fn init(input_path: *const c_char) -> Box<DataStructure> {
         }
     }
 
-    let tree: Option<pst_3d::Pst3d> = match input::import_labels(&input_path) {
+    let tree: Option<pst_3d::GeoPst3d> = match input::import_labels(&input_path) {
         Ok(res) => {
             println!("Successfully imported {} labels", res.len());
-            Some(pst_3d::Pst3d::new(res))
+            Some(pst_3d::GeoPst3d::new(res))
         }
         Err(e) => {
             println!("Could not read the given input file:{}\n\t{:?}\n",
