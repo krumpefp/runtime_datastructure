@@ -55,8 +55,6 @@ impl BBox {
     /// ```
     ///
     pub fn new(min_x: f64, min_y: f64, max_x: f64, max_y: f64) -> BBox {
-        assert!(max_x >= min_x);
-        assert!(max_y >= min_y);
         BBox {
             m_max_x: max_x,
             m_max_y: max_y,
