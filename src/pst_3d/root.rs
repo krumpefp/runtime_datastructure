@@ -91,10 +91,10 @@ impl Root {
         data.sort_by(|first, second| if first.m_t < second.m_t {
                          Ordering::Less
                      } else if first.m_t > second.m_t {
-            Ordering::Greater
-        } else {
-            Ordering::Equal
-        });
+                         Ordering::Greater
+                     } else {
+                         Ordering::Equal
+                     });
         data.reverse();
 
         for (idx, d) in data.iter().enumerate() {
@@ -240,6 +240,7 @@ impl RootRef {
     ///
     /// Compare two Root refs with respect to the t value.
     ///
+    #[allow(dead_code)]
     fn order_by_t(first: &Self, second: &Self) -> Ordering {
         if first.m_t < second.m_t {
             Ordering::Less

@@ -66,7 +66,6 @@ fn main() {
         }
     }
 
-    let mut tree = pst_3d::Pst3d::new(labels.clone());
 
     // Testing stuff ...
     if testing {

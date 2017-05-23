@@ -93,7 +93,7 @@ impl GeoPst3d {
     /// let _ = pst_3d::GeoPst3d::new(v);
     /// ```
     ///
-    pub fn new(mut labels: Vec<Label>) -> GeoPst3d {
+    pub fn new(labels: Vec<Label>) -> GeoPst3d {
         // ensure that each Label has valid coordinates
         let bbox = BBox::new(-180., -90., 180., 90.);
         for l in &labels {
@@ -252,8 +252,6 @@ impl GeoPst3d {
 /// A struct to store the 3d PST and provide a basic interface
 ///
 pub struct Pst3d {
-    m_bbox: BBox,
-
     m_data: Vec<Root>,
     m_root_idx: Option<usize>,
 }
@@ -300,8 +298,6 @@ impl Pst3d {
         let tree_root = Root::init_pst3d(&mut v);
 
         Pst3d {
-            m_bbox: bbox,
-
             m_data: v,
             m_root_idx: tree_root,
         }
