@@ -54,6 +54,7 @@ typedef struct C_Label {
 typedef struct C_Result {
 	uint64_t size;
 	C_Label* data;
+        char* error;
 } C_Result;
 
 ///
