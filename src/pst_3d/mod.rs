@@ -115,7 +115,7 @@ impl GeoPst3d {
     /// ```
     /// use rt_datastructure::primitives::{label, bbox};
     /// use rt_datastructure::pst_3d;
-    ///
+    ///.
     /// let mut v = Vec::new();
     /// v.push(label::Label::new(1., 2., 10., 1, 1, 1.5, "T1".to_string()));
     /// v.push(label::Label::new(2., 3., 9., 2, 1, 1.5, "T2".to_string()));
@@ -131,7 +131,7 @@ impl GeoPst3d {
     /// let t = pst_3d::GeoPst3d::new(v);
     ///
     /// let bb = bbox::BBox::new(4., 5., 7., 8.);
-    /// let r = t.get(&bb, 4.);
+    /// let r = t.get(&bb, 4.).unwrap();
     ///
     /// for e in &r {
     ///   println!("{}, ", e.to_string());
@@ -160,7 +160,7 @@ impl GeoPst3d {
     /// let t = pst_3d::GeoPst3d::new(v);
     ///
     /// let bb = bbox::BBox::new(170., 0., -170., 90.);
-    /// let r = t.get(&bb, 1.);
+    /// let r = t.get(&bb, 1.).unwrap();
     ///
     /// for e in &r {
     ///   println!("{}, ", e.to_string());
@@ -170,11 +170,8 @@ impl GeoPst3d {
     /// assert!(r.len() == 4);
     /// ```
     ///
-    pub fn get<'a>(&'a self, bbox: &BBox, min_t: f64) -> Vec<&'a Label> {
-        assert!(bbox.get_min_y() <= bbox.get_max_y());
-        assert!(bbox.get_min_y() >= -90. && bbox.get_max_y() <= 90.);
-        assert!(bbox.get_min_x() >= -180. && bbox.get_min_x() <= 180.);
-        assert!(bbox.get_max_x() >= -180. && bbox.get_max_x() <= 180.);
+    pub fn get<'a>(&'a self, bbox: &BBox, min_t: f64) -> Result<Vec<&'a Label>, &'static str> {
+        bbox.check_coordinate_consistency()?;
 
         if bbox.get_max_x() < bbox.get_min_x() {
             let mut res = self.m_pst
@@ -187,10 +184,10 @@ impl GeoPst3d {
                                                 bbox.get_max_y()),
                                      min_t));
 
-            return res;
+            return Ok(res);
         }
 
-        self.m_pst.get(&bbox, min_t)
+        Ok(self.m_pst.get(&bbox, min_t))
     }
 
     ///

@@ -28,6 +28,7 @@ use primitives::label::Label;
 /// The struct defines an axis aligned rectangular area in 2 dimension via min and max in each
 /// dimension X and Y.
 ///
+#[derive(Debug)]
 pub struct BBox {
     m_max_x: f64,
     m_max_y: f64,
@@ -280,5 +281,34 @@ impl BBox {
                 self.m_max_x,
                 self.m_min_y,
                 self.m_max_y)
+    }
+
+    ///
+    /// Check that the bounding box contains valid a coordinate range
+    ///
+    /// Valid coordinates have y-values in the range [-90,90] and
+    /// x-values in the range [-180,180]
+    ///
+    /// # Examples
+    /// ```
+    /// use rt_datastructure::primitives::bbox;
+    ///
+    /// let bb = bbox::BBox::new(1., 2., 3., 4.);
+    /// assert!(bb.check_coordinate_consistency().is_ok());
+    ///
+    /// let bb = bbox::BBox::new(10., -92., 3., 4.);
+    /// assert!(bb.check_coordinate_consistency().is_err());
+    /// ```
+    pub fn check_coordinate_consistency(&self) -> Result<(), &'static str> {
+        // Added .1 to be safe against floating point imprecision
+        if self.m_min_y >= self.m_max_y {
+            return Err("lower y bound is greater than upper y bound");
+        } else if self.m_min_y <= -90.1 || self.m_max_y >= 90.1 {
+            return Err("y values have to be in the range [-90.0, 90.0]");
+        } else if (self.m_min_x <= -180.1 || self.m_min_x >= 180.1) ||
+                  (self.m_max_x <= -180.1 || self.m_max_x >= 180.1) {
+            return Err("x values have to be in the range [-180.0, 180.0]");
+        }
+        Ok(())
     }
 }

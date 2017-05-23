@@ -81,6 +81,7 @@ pub mod input;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::os::raw::c_char;
+use std::ptr;
 
 use std::error::Error;
 use std::io::prelude::*;
@@ -126,6 +127,7 @@ pub struct C_Result {
     size: u64,
 
     data: *mut C_Label,
+    error: *const c_char,
 }
 
 
@@ -209,12 +211,23 @@ pub extern "C" fn get_data(ds: &DataStructure,
             return C_Result {
                        size: len,
                        data: pointer,
+                       error: ptr::null(),
                    };
         }
     };
 
     let bb = primitives::bbox::BBox::new(min_x, min_y, max_x, max_y);
-    let r = pst.get(&bb, min_t);
+    let r;
+    match pst.get(&bb, min_t) {
+        Ok(res) => r = res,
+        Err(s) => {
+            return C_Result {
+                       size: 0,
+                       data: ptr::null_mut(),
+                       error: CString::new(s).unwrap().into_raw(),
+                   }
+        }
+    };
 
     result = Vec::with_capacity(r.len());
     for e in &r {
@@ -235,6 +248,7 @@ pub extern "C" fn get_data(ds: &DataStructure,
     C_Result {
         size: r.len() as u64,
         data: pointer,
+        error: ptr::null(),
     }
 }
 
@@ -248,7 +262,10 @@ pub extern "C" fn free_result(res: C_Result) {
         for label in vec {
             let _ = CString::from_raw(label.label);
         }
-    }
+        if res.error != ptr::null() {
+            CString::from_raw(res.error as *mut c_char);
+        }
+    };
     drop(res);
 }
 
@@ -261,7 +278,7 @@ mod tests {
     const TEST_SIZE: usize = 500;
     const TEST_COUNT: usize = 1;
 
-    use rand::{thread_rng, Rng};
+    use rand::Rng;
 
     use std::collections::HashSet;
 
