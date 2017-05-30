@@ -171,11 +171,8 @@ impl GeoPst3d {
     /// ```
     ///
     pub fn get<'a>(&'a self, bbox: &BBox, min_t: f64) -> Vec<&'a Label> {
-        assert!(bbox.get_min_y() <= bbox.get_max_y());
-        assert!(bbox.get_min_y() >= -90. && bbox.get_max_y() <= 90.);
-        assert!(bbox.get_min_x() >= -180. && bbox.get_min_x() <= 180.);
-        assert!(bbox.get_max_x() >= -180. && bbox.get_max_x() <= 180.);
-
+        // Check if bbox includes the -180/180 meridian.
+        // If this is the case, split the request into two valid requests.
         if bbox.get_max_x() < bbox.get_min_x() {
             let mut res = self.m_pst
                 .get(&BBox::new(bbox.get_min_x(), bbox.get_min_y(), 180., bbox.get_max_y()),
