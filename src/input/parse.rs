@@ -26,6 +26,7 @@
 ///
 
 use regex::Regex;
+use std::error::Error;
 
 use primitives::label::Label;
 
@@ -55,12 +56,12 @@ use primitives::label::Label;
 pub fn validate_label(s_input: &String) -> bool {
     lazy_static! {
         static ref RE : Regex = Regex::new("\
-        ^-?\\d{1,3}\\.\\d*(e-?\\d+)? \
-        -?\\d{1,3}\\.\\d*(e-?\\d+)? \
+        ^-?\\d{1,3}(\\.\\d+(e-?\\d+)?)? \
+        -?\\d{1,3}(\\.\\d+(e-?\\d+)?)? \
         \\d+ \\d+ \
-        \\d+\\.\\d*(e-?\\d+)? \
-        \\d+\\.\\d*(e-?\\d+)? \
-        \\d+\\.\\d*(e-?\\d+)? \
+        \\d+(\\.\\d+(e-?\\d+)?)? \
+        \\d+(\\.\\d+(e-?\\d+)?)? \
+        \\d+(\\.\\d+(e-?\\d+)?)? \
         '.*'\
         ").unwrap();
     }
@@ -84,43 +85,42 @@ pub fn validate_label(s_input: &String) -> bool {
 /// let l = parse::parse_label(&s);
 /// ```
 ///
-/// ```should_panic
+/// ```
 /// use rt_datastructure::input::parse;
 /// use rt_datastructure::primitives::label;
 ///
 /// let s = "8.9351249 3627273522 1 1.4922737369836614 3300.0 11.0 'Timmersloh'".to_string();
 /// let l = parse::parse_label(&s);
+/// 
+/// assert!(l.is_err())
 /// ```
 ///
-pub fn parse_label(s_input: &String) -> Label {
+pub fn parse_label(s_input: &String) -> Result<Label, Box<Error>> {
     lazy_static! {
         static ref RE2 : Regex = Regex::new("\
-        ^(?P<y>-?\\d{1,3}\\.\\d*(e-?\\d+)?) \
-        (?P<x>-?\\d{1,3}\\.\\d*(e-?\\d+)?) \
+        ^(?P<y>-?\\d{1,3}(\\.\\d+(e-?\\d+)?)?) \
+        (?P<x>-?\\d{1,3}(\\.\\d+(e-?\\d+)?)?) \
         (?P<osmId>\\d+) \
         (?P<prio>\\d+) \
-        (?P<elimT>\\d+\\.\\d*(e-?\\d+)?) \
-        (?P<rad>\\d+\\.\\d*(e-?\\d+)?) \
-        (?P<lblFac>\\d+\\.\\d*(e-?\\d+)?) \
+        (?P<elimT>\\d+(\\.\\d+(e-?\\d+)?)?) \
+        (?P<rad>\\d+(\\.\\d+(e-?\\d+)?)?) \
+        (?P<lblFac>\\d+(\\.\\d+(e-?\\d+)?)?) \
         '(?P<lbl>.*)'\
         ").unwrap();
     }
-    //     println!("Trimmed string: {}", s_input);
-    //     let fields = RE2.captures(s_input).unwrap();
+
     let fields = match RE2.captures(s_input) {
         Some(capture) => capture,
-        None => panic!("Could not evaulate poi: {}", s_input),
+        None => return Err(From::from(format!("Could not evaulate poi: {}", s_input))),
     };
 
-    //     println!("Splitted fields {:?}", fields);
-
-    let x: f64 = fields["x"].parse().expect("Could not parse float");
-    let y: f64 = fields["y"].parse().expect("Could not parse float");
-    let elim_t: f64 = fields["elimT"].parse().expect("Could not parse float");
-    let osm_id: i64 = fields["osmId"].parse().expect("Could not parse i64");
-    let prio: i32 = fields["prio"].parse().expect("Could not parse i32");
-    let lbl_f: f64 = fields["lblFac"].parse().expect("Could not parse f64");
+    let x: f64 = fields["x"].parse()?;
+    let y: f64 = fields["y"].parse()?;
+    let elim_t: f64 = fields["elimT"].parse()?;
+    let osm_id: i64 = fields["osmId"].parse()?;
+    let prio: i32 = fields["prio"].parse()?;
+    let lbl_f: f64 = fields["lblFac"].parse()?;
     let label: String = fields["lbl"].to_string();
 
-    Label::new(x, y, elim_t, osm_id, prio, lbl_f, label)
+    Ok(Label::new(x, y, elim_t, osm_id, prio, lbl_f, label))
 }

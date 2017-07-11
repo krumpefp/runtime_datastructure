@@ -50,16 +50,21 @@ pub fn import_labels(path: &String) -> Result<Vec<Label>, Box<Error>> {
     for (idx, line_res) in reader.lines().enumerate() {
         let line = line_res.unwrap().to_string();
         if idx == 0 {
-            total = line.parse()
-                .expect("Could not parse number of labels in the file");
+            total = line.parse()?;
             println!("Reading {} labels from the file", total);
             continue;
         } else if idx == 1 {
-            //             println!("The file header line is:\n\t{}", line);
+            // skip the header line
             continue;
         }
 
-        result.push(parse::parse_label(&line));
+        match parse::parse_label(&line) {
+            Ok(label) => result.push(label),
+            Err(e) => {
+                println!("Line {} could not be parsed!\nRepored error was: {}", line, e);
+                continue;
+            },
+        }
     }
 
     if total != result.len() {
