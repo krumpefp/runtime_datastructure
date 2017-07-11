@@ -56,12 +56,12 @@ use primitives::label::Label;
 pub fn validate_label(s_input: &String) -> bool {
     lazy_static! {
         static ref RE : Regex = Regex::new("\
-        ^-?\\d{1,3}(\\.\\d+(e-?\\d+)?)? \
-        -?\\d{1,3}(\\.\\d+(e-?\\d+)?)? \
+        ^-?\\d{1,3}(\\.\\d+(e[+-]?\\d+)?)? \
+        -?\\d{1,3}(\\.\\d+(e[+-]?\\d+)?)? \
         \\d+ \\d+ \
-        \\d+(\\.\\d+(e-?\\d+)?)? \
-        \\d+(\\.\\d+(e-?\\d+)?)? \
-        \\d+(\\.\\d+(e-?\\d+)?)? \
+        \\d+(\\.\\d+(e[+-]?\\d+)?)? \
+        \\d+(\\.\\d+(e[+-]?\\d+)?)? \
+        \\d+(\\.\\d+(e[+-]?\\d+)?)? \
         '.*'\
         ").unwrap();
     }
@@ -98,13 +98,13 @@ pub fn validate_label(s_input: &String) -> bool {
 pub fn parse_label(s_input: &String) -> Result<Label, Box<Error>> {
     lazy_static! {
         static ref RE2 : Regex = Regex::new("\
-        ^(?P<y>-?\\d{1,3}(\\.\\d+(e-?\\d+)?)?) \
-        (?P<x>-?\\d{1,3}(\\.\\d+(e-?\\d+)?)?) \
+        ^(?P<y>-?\\d{1,3}(\\.\\d+(e[+-]?\\d+)?)?) \
+        (?P<x>-?\\d{1,3}(\\.\\d+(e[+-]?\\d+)?)?) \
         (?P<osmId>\\d+) \
         (?P<prio>\\d+) \
-        (?P<elimT>\\d+(\\.\\d+(e-?\\d+)?)?) \
-        (?P<rad>\\d+(\\.\\d+(e-?\\d+)?)?) \
-        (?P<lblFac>\\d+(\\.\\d+(e-?\\d+)?)?) \
+        (?P<elimT>\\d+(\\.\\d+(e[+-]?\\d+)?)?) \
+        (?P<rad>\\d+(\\.\\d+(e[+-]?\\d+)?)?) \
+        (?P<lblFac>\\d+(\\.\\d+(e[+-]?\\d+)?)?) \
         '(?P<lbl>.*)'\
         ").unwrap();
     }
